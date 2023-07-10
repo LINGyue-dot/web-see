@@ -39,6 +39,8 @@ const HandleEvents = {
   },
   handleError(ev: ErrorTarget): void {
     const target = ev.target;
+
+    // localName 用于区分是否是 HTML 元素，window 就没有 localName 属性
     if (!target || (ev.target && !ev.target.localName)) {
       // vue和react捕获的报错使用ev解析，异步错误使用ev.error解析
       const stackFrame = ErrorStackParser.parse(!target ? ev : ev.error)[0];
@@ -60,6 +62,7 @@ const HandleEvents = {
         status: STATUS_CODE.ERROR,
       });
       const hash: string = getErrorUid(
+        // 错误反复上报
         `${EVENTTYPES.ERROR}-${ev.message}-${fileName}-${columnNumber}`
       );
       // 开启repeatCodeError第一次报错才上报
